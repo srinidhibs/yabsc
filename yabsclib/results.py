@@ -96,7 +96,8 @@ class ResultModel(QtCore.QAbstractItemModel):
         if column == 0:
             return package
         else:
-            return self.results[package][self._targetIndexFromName(target)]
+            if self._targetIndexFromName(target) < len(self.results[package]):
+                return self.results[package][self._targetIndexFromName(target)]
     
     def packageFromRow(self, row):
         """
@@ -189,8 +190,9 @@ class ResultModel(QtCore.QAbstractItemModel):
         Return whether a package has a result in one of the visible targets
         """
         for (i, target) in enumerate(self.targets):
-            if target in self.visibletargets and self.results[package][i] == result:
-                return True
+            if i < len(self.results[package]):
+                if target in self.visibletargets and self.results[package][i] == result:
+                    return True
         return False
     
     def numPackagesWithResult(self, result):
